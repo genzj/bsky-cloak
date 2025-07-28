@@ -1,17 +1,17 @@
-import APP_HTML from "./html/main-content.html";
-import STYLES from "./scss/style.scss";
-
+import { addOverridingStyles } from "./style";
+import { patchedFetch } from "./fetch";
 class App {
   constructor() {
-    this.injectHTML(APP_HTML);
-    console.log(
-      "If you see this message, it means that the script has been injected :)"
-    );
   }
-  private injectHTML(htmlContent: string) {
-    GM_addStyle(STYLES);
-    document.querySelector("body")?.insertAdjacentHTML("afterbegin", htmlContent);
+
+  start() {
+    addOverridingStyles();
+    (unsafeWindow as any).patchedFetch = patchedFetch;
+    if (!(unsafeWindow.fetch as any).patched) {
+      unsafeWindow.fetch = patchedFetch;
+    }
   }
 }
 
-const yourAppInstance = new App();
+const app = new App();
+app.start();

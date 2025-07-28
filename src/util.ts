@@ -1,0 +1,37 @@
+export type Patcher<V> = (original: V) => Promise<V>;
+export type ObjectValue = number | string | null | boolean | Record<string, any> | ObjectValue[];
+export type ObjectValuePatcher = Patcher<ObjectValue>;
+
+export async function deepMapOnKey(
+  obj: Record<string, any>,
+  key: string,
+  fn: ObjectValuePatcher
+): Promise<Record<string, any>>;
+export async function deepMapOnKey(
+  obj: any[],
+  key: string,
+  fn: ObjectValuePatcher
+): Promise<any[]>;
+export async function deepMapOnKey(
+  obj: ObjectValue,
+  key: string,
+  fn: ObjectValuePatcher
+): Promise<ObjectValue> {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return await Promise.all(
+      obj.map(async (ele) => await deepMapOnKey(ele, key, fn))
+    );
+  }
+
+  const mapped: Record<string, ObjectValue> = {};
+  for (const k in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, k)) {
+      mapped[k] = k === key ? await fn(obj[k]) : await deepMapOnKey(obj[k], key, fn);
+    }
+  }
+  return mapped;
+}

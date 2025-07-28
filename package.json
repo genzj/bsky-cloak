@@ -1,23 +1,27 @@
 {
   "name": "bsky-cloak",
   "version": "1.0.2",
-  "description": "A Greasemonkey/Tampermonkey/Violentmonkey Bun + TypeScript boilerplate",
+  "description": "A userscript hiding Bsky.App user displayname and handler",
   "module": "src/index.ts",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/genzj/bun-ts-userscript-starter.git"
+    "url": "git+https://github.com/genzj/bksy-cloak.git"
   },
   "bugs": {
-    "url": "https://github.com/genzj/bun-ts-userscript-starter/issues"
+    "url": "https://github.com/genzj/bsky-cloak/issues"
   },
-  "homepage": "https://github.com/genzj/bun-ts-userscript-starter#readme",
+  "homepage": "https://github.com/genzj/bsky-cloak#readme",
   "userscriptHeader": {
-    "@match": [
-      "http*://example.com/",
-      "http*://www.example.com/"
+    "@grant": [
+      "unsafeWindow"
     ],
-    "@grant": "GM_addStyle"
+    "@match": [
+      "http*://bsky.app/*"
+    ],
+    "@run-at": [
+      "document-start"
+    ]
   },
   "author": "genzj",
   "license": "MIT",
@@ -42,5 +46,7 @@
     "clean": "rimraf ./dist/",
     "dev": "bun build.ts --dev --server --watch"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@faker-js/faker": "^9.9.0"
+  }
 }

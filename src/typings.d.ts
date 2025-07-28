@@ -10,6 +10,4 @@ declare module "*.scss" {
   export default content;
 }
 
-// Declare needed GM APIs.
-// Ref: https://www.tampermonkey.net/documentation.php?locale=en#api
-declare function GM_addStyle(code: string): HTMLStyleElement;
+declare var unsafeWindow: typeof window;

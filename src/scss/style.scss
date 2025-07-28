@@ -1,16 +1,39 @@
-@mixin gradient($direction, $list) {
-    background: linear-gradient($direction, $list);
+// Profile link styling with glare animation
+a[aria-label="View profile"] {
+  &:last-child {
+    color: transparent !important;
+    background: rgba(128, 128, 128, 0.5) !important;
+    margin-left: 0.5em !important;
+    border-radius: 5px !important;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .4), transparent);
+      transform: skewX(-20deg);
+      animation: glareAnimation 5s linear infinite;
+    }
+  }
 }
 
-.injected-html {
-    font-family: Arial, Helvetica, sans-serif;
-    color: rgba(255, 255, 255, 0.8);
-    @include gradient(
-        90deg,
-        (
-            rgba(2, 0, 36, 1) 0%,
-            rgba(9, 9, 121, 1) 35%,
-            rgba(0, 212, 255, 1) 100%,
-        )
-    );
+// Hide specific profile elements
+main~div a[aria-label="View profile"]>div>div:last-child {
+  display: none !important;
+}
+
+// Glare animation keyframes
+@keyframes glareAnimation {
+
+  0%,
+  100% {
+    left: -100%;
+  }
+
+  50% {
+    left: 100%;
+  }
 }
