@@ -1,6 +1,6 @@
-import { Faker, en, generateMersenne32Randomizer } from "@faker-js/faker";
-import { settingsManager } from "./settings";
-import type { ObjectValue } from "./util";
+import { Faker, en, generateMersenne32Randomizer } from '@faker-js/faker';
+import { settingsManager } from './settings';
+import type { ObjectValue } from './util';
 
 const nameMap = new Map<string, string>();
 let faker: Faker | undefined = undefined;
@@ -15,7 +15,7 @@ function generateHash(s: string): number {
 }
 
 export async function patchAvatar(original: ObjectValue): Promise<ObjectValue> {
-  if (typeof original !== "string") {
+  if (typeof original !== 'string') {
     return original;
   }
   console.debug(`patching avatar ${original}`);
@@ -37,7 +37,7 @@ function getFaker(): Faker {
 
 function pickByHash<T>(hashKey: string, array?: T[]): T {
   if (!array || array.length === 0) {
-    throw new Error("Array cannot be null, undefined or empty");
+    throw new Error('Array cannot be null, undefined or empty');
   }
   const hash = Math.abs(generateHash(hashKey));
   const index = hash % array.length;
@@ -47,11 +47,11 @@ function pickByHash<T>(hashKey: string, array?: T[]): T {
 export async function patchDisplayName(
   original: ObjectValue
 ): Promise<ObjectValue> {
-  if (typeof original !== "string") {
+  if (typeof original !== 'string') {
     return original;
   }
   const stored = nameMap.get(original);
-  if (typeof stored === "string") {
+  if (typeof stored === 'string') {
     return stored;
   }
 

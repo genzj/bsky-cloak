@@ -1,13 +1,13 @@
-import { isWindowFetchPatched, patchedFetch } from "./fetch";
-import { settingsManager } from "./settings";
-import { addOverridingStyles } from "./style";
+import { isWindowFetchPatched, patchedFetch } from './fetch';
+import { settingsManager } from './settings';
+import { addOverridingStyles } from './style';
 class App {
   start() {
     // Initialize settings
     settingsManager.init();
 
     addOverridingStyles();
-    if (!isWindowFetchPatched) {
+    if (!isWindowFetchPatched()) {
       unsafeWindow.fetch = patchedFetch;
     }
   }

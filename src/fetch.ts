@@ -1,16 +1,16 @@
-import { patchAvatar, patchDisplayName } from "./patcher";
-import { deepMapOnKey, type ObjectValue } from "./util";
+import { patchAvatar, patchDisplayName } from './patcher';
+import { deepMapOnKey, type ObjectValue } from './util';
 
 const OUT_OF_SCOPE_API: readonly string[] = [
   // login info
-  "/com.atproto.server.getSession",
+  '/com.atproto.server.getSession',
 
   // feed info and name
-  "/app.bsky.feed.getFeedGenerators",
+  '/app.bsky.feed.getFeedGenerators',
 
   // current user's profile
-  "/app.bsky.actor.getProfiles",
-  "/app.bsky.unspecced.getConfig",
+  '/app.bsky.actor.getProfiles',
+  '/app.bsky.unspecced.getConfig',
 ];
 
 const originalFetch: typeof fetch = unsafeWindow.fetch;
@@ -29,7 +29,7 @@ async function patchedFetch(
   ...args: Parameters<typeof fetch>
 ): Promise<Response> {
   if (isWindowFetchPatched()) {
-    throw new Error("already patched");
+    throw new Error('already patched');
   }
   // Optionally inspect the arguments (URL, options)
   const response: Response = await originalFetch.apply(unsafeWindow, args);
@@ -39,12 +39,12 @@ async function patchedFetch(
   const { url } = cloned;
   console.debug(`fetched: ${url}`);
 
-  if (!url.includes("/xrpc/")) {
+  if (!url.includes('/xrpc/')) {
     console.debug(`${url} isn't a xrpc, skip patching`);
     return response;
   }
 
-  if (OUT_OF_SCOPE_API.some((api) => url.includes(api))) {
+  if (OUT_OF_SCOPE_API.some(api => url.includes(api))) {
     console.debug(`${url} isn't a candidate API, skip patching`);
     return response;
   }
@@ -55,12 +55,13 @@ async function patchedFetch(
   let data: ObjectValue;
   try {
     data = JSON.parse(text) as ObjectValue;
-    data = await deepMapOnKey(data, "avatar", patchAvatar);
-    data = await deepMapOnKey(data, "displayName", patchDisplayName);
+    data = await deepMapOnKey(data, 'avatar', patchAvatar);
+    data = await deepMapOnKey(data, 'displayName', patchDisplayName);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
     (data as any).injected = true; // Modify the response
     console.debug(`patched data of ${url}: ${JSON.stringify(data)}`);
-  } catch (e: unknown) {
+  }
+  catch (e: unknown) {
     // Not JSON; return as-is
     console.warn(e);
     return response;

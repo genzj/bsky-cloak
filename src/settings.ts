@@ -1,34 +1,34 @@
 const AVAILABLE_STYLES = [
-  "adventurer",
-  "adventurer-neutral",
-  "avataaars",
-  "avataaars-neutral",
-  "big-ears",
-  "big-ears-neutral",
-  "big-smile",
-  "bottts",
-  "bottts-neutral",
-  "croodles",
-  "croodles-neutral",
-  "dylan",
-  "fun-emoji",
-  "glass",
-  "icons",
-  "identicon",
-  "initials",
-  "lorelei",
-  "lorelei-neutral",
-  "micah",
-  "miniavs",
-  "notionists",
-  "notionists-neutral",
-  "open-peeps",
-  "personas",
-  "pixel-art",
-  "pixel-art-neutral",
-  "rings",
-  "shapes",
-  "thumbs",
+  'adventurer',
+  'adventurer-neutral',
+  'avataaars',
+  'avataaars-neutral',
+  'big-ears',
+  'big-ears-neutral',
+  'big-smile',
+  'bottts',
+  'bottts-neutral',
+  'croodles',
+  'croodles-neutral',
+  'dylan',
+  'fun-emoji',
+  'glass',
+  'icons',
+  'identicon',
+  'initials',
+  'lorelei',
+  'lorelei-neutral',
+  'micah',
+  'miniavs',
+  'notionists',
+  'notionists-neutral',
+  'open-peeps',
+  'personas',
+  'pixel-art',
+  'pixel-art-neutral',
+  'rings',
+  'shapes',
+  'thumbs',
 ] as const;
 
 type DiceBearAvatarStyle = (typeof AVAILABLE_STYLES)[number];
@@ -39,11 +39,11 @@ export interface Settings {
 }
 
 const DEFAULT_SETTINGS: Settings = {
-  avatarStyle: "big-smile",
+  avatarStyle: 'big-smile',
   seed: Date.now(),
 };
 
-const STORAGE_KEY = "bsky-cloak-settings-v1";
+const STORAGE_KEY = 'bsky-cloak-settings-v1';
 
 export class SettingsManager {
   private settings: Settings;
@@ -60,9 +60,10 @@ export class SettingsManager {
 
   private static loadSettings(): Settings {
     try {
-      const stored = GM_getValue<Settings>(STORAGE_KEY, "");
+      const stored = GM_getValue(STORAGE_KEY, '');
       return stored ? { ...DEFAULT_SETTINGS, ...stored } : DEFAULT_SETTINGS;
-    } catch {
+    }
+    catch {
       return DEFAULT_SETTINGS;
     }
   }
@@ -82,17 +83,21 @@ export class SettingsManager {
   }
 
   private registerMenuCommands(): void {
-    GM_registerMenuCommand("Set Avatar Style", () =>
-      { this.showAvatarStyleDialog(); }
+    GM_registerMenuCommand('Set Avatar Style', () => {
+      this.showAvatarStyleDialog();
+    });
+    GM_registerMenuCommand('Preview Avatar Styles', () =>
+      unsafeWindow.open('https://www.dicebear.com/styles/', '_blank')
     );
-    GM_registerMenuCommand("Preview Avatar Styles", () =>
-      unsafeWindow.open("https://www.dicebear.com/styles/", "_blank")
-    );
-    GM_registerMenuCommand("Set Custom Seed", () => { this.setSeed(); });
-    GM_registerMenuCommand("Regenerate/Fix Random Seed", () =>
-      { this.regenerateSeed(); }
-    );
-    GM_registerMenuCommand("Reset To Default", () => { this.resetSettings(); });
+    GM_registerMenuCommand('Set Custom Seed', () => {
+      this.setSeed();
+    });
+    GM_registerMenuCommand('Regenerate/Fix Random Seed', () => {
+      this.regenerateSeed();
+    });
+    GM_registerMenuCommand('Reset To Default', () => {
+      this.resetSettings();
+    });
   }
 
   private showAvatarStyleDialog(): void {
@@ -100,9 +105,9 @@ export class SettingsManager {
     const current = this.settings.avatarStyle;
     const choice = prompt(
       `Choose avatar style (current: ${current}):\n${styles
-        .map((s, i) => `${i + 1}. ${s}`)
-        .join("\n")}\n\nEnter the number (1-${styles.length}):`,
-      "1"
+        .map((s, i) => `${(i + 1).toString()}. ${s}`)
+        .join('\n')}\n\nEnter the number (1-${styles.length.toString()}):`,
+      '1'
     );
 
     if (choice) {
@@ -117,7 +122,7 @@ export class SettingsManager {
 
   private setSeed(): void {
     const input = prompt(
-      `Enter seed number (current: ${this.settings.seed}):`,
+      `Enter seed number (current: ${this.settings.seed.toString()}):`,
       this.settings.seed.toString()
     );
     if (input) {
@@ -125,26 +130,26 @@ export class SettingsManager {
       if (!isNaN(seed)) {
         this.settings.seed = seed;
         this.saveSettings(true);
-        alert(`Seed set to: ${this.settings.seed}`);
+        alert(`Seed set to: ${this.settings.seed.toString()}`);
       }
     }
   }
 
   private regenerateSeed(): void {
     if (
-      confirm(`Regenerate random seed? Current seed: ${this.settings.seed}`)
+      confirm(`Regenerate random seed? Current seed: ${this.settings.seed.toString()}`)
     ) {
       this.settings.seed = Date.now();
       this.saveSettings(true);
-      alert(`Random seed regenerated: ${this.settings.seed}`);
+      alert(`Random seed regenerated: ${this.settings.seed.toString()}`);
     }
   }
 
-  get avatarStyle(): Settings["avatarStyle"] {
+  get avatarStyle(): Settings['avatarStyle'] {
     return this.settings.avatarStyle;
   }
 
-  get seed(): Settings["seed"] {
+  get seed(): Settings['seed'] {
     return this.settings.seed;
   }
 }
