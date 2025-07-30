@@ -5,11 +5,11 @@
 ## 安装
 
 * 先安装篡改猴插件：<https://www.tampermonkey.net/index.php?locale=zh>
-* 再点击bsky-cloak.user.js文件的RAW按钮，或者这个直达链接：<https://gist.github.com/genzj/5ce3d035830591f360446bd3bbd7dc3e/raw/90d2156badfe721e0942f3c9ef746917211f07e5/bsky-cloak.user.js>
+* 再点击这个直达链接：<https://github.com/genzj/bsky-cloak/releases/latest/download/bsky-cloak.user.js>
 
 ## 效果预览
 
-<img src="https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:aecbl5ebnj55x7rmiecfxvh7/bafkreic3llrbf4uhl63ytnsrsyoyn5aupd4o3xggrgulnkx5f7emoeosci@jpeg" alt="preview" style="width:400px;"/>
+<img src="screenshots/preview-1.png" alt="preview" style="width:400px;"/>
 
 ## 功能
 
@@ -20,3 +20,9 @@
 * [x] 设置头像风格 [可选风格](https://www.dicebear.com/styles/)
 * [x] 持续化随机用户名和头像
 * [ ] 暂停屏蔽
+
+## 常见问题
+
+### 安装启用后用户名和头像依旧
+
+成因尚在研究，似乎是性能因素。目前的解决方案是在蓝天页面任意位置点右键，选择“inspect”/“审查元素”，然后保持审查元素面板打开的情况下刷新页面。之后即便不开审查元素面板也能保持正常（一段时间）。
