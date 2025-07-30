@@ -34,17 +34,13 @@ const MINIMAL_USER_SCRIPT_HEADER_ITEMS = [
   "@author",
 ] as const;
 
-const MINIMAL_USER_SCRIPT_HEADER_SET: Set<
+const MINIMAL_USER_SCRIPT_HEADER_SET = new Set<
   (typeof MINIMAL_USER_SCRIPT_HEADER_ITEMS)[number]
-> = new Set(MINIMAL_USER_SCRIPT_HEADER_ITEMS);
+>(MINIMAL_USER_SCRIPT_HEADER_ITEMS);
 
-type MinimalUserScriptHeader = {
-  [K in (typeof MINIMAL_USER_SCRIPT_HEADER_ITEMS)[number]]: string[] | string;
-};
+type MinimalUserScriptHeader = Record<(typeof MINIMAL_USER_SCRIPT_HEADER_ITEMS)[number], string[] | string>;
 
-type UserScriptHeader = MinimalUserScriptHeader & {
-  [k: string]: string[] | string;
-};
+type UserScriptHeader = MinimalUserScriptHeader & Record<string, string[] | string>;
 
 type ExtendedPackageJson = PackageJson & {
   userscriptHeader: UserScriptHeader;
@@ -244,7 +240,7 @@ interface Watcher {
 }
 
 function watch(option: BuildOption): Watcher {
-  let stopped: boolean = false;
+  let stopped = false;
   const watchPath = `${import.meta.dir}/src`;
   const watcher = fswatch(watchPath, { recursive: true }, (event, filename) => {
     if (stopped) return;

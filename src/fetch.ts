@@ -1,7 +1,7 @@
-import { deepMapOnKey } from "./util";
 import { patchAvatar, patchDisplayName } from "./patcher";
+import { deepMapOnKey, type ObjectValue } from "./util";
 
-const OUT_OF_SCOPE_API: ReadonlyArray<string> = [
+const OUT_OF_SCOPE_API: readonly string[] = [
   // login info
   "/com.atproto.server.getSession",
 
@@ -15,6 +15,11 @@ const OUT_OF_SCOPE_API: ReadonlyArray<string> = [
 
 const originalFetch: typeof fetch = unsafeWindow.fetch;
 
+export function isWindowFetchPatched(): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+  return (originalFetch as any).patched as boolean;
+}
+
 /**
  * Patches the window.fetch API and modifies its response
  * @param args - The arguments passed to the original fetch function
@@ -23,7 +28,7 @@ const originalFetch: typeof fetch = unsafeWindow.fetch;
 async function patchedFetch(
   ...args: Parameters<typeof fetch>
 ): Promise<Response> {
-  if ((originalFetch as any).patched) {
+  if (isWindowFetchPatched()) {
     throw new Error("already patched");
   }
   // Optionally inspect the arguments (URL, options)
@@ -47,12 +52,13 @@ async function patchedFetch(
   const text = await cloned.text();
 
   // Example: Modify response text (say, inject extra data into JSON)
-  let data: Record<string, any>;
+  let data: ObjectValue;
   try {
-    data = JSON.parse(text);
+    data = JSON.parse(text) as ObjectValue;
     data = await deepMapOnKey(data, "avatar", patchAvatar);
     data = await deepMapOnKey(data, "displayName", patchDisplayName);
-    data.injected = true; // Modify the response
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+    (data as any).injected = true; // Modify the response
     console.debug(`patched data of ${url}: ${JSON.stringify(data)}`);
   } catch (e: unknown) {
     // Not JSON; return as-is
