@@ -17,6 +17,6 @@
 * [x] 随机化用户名
 * [x] 隐藏时间线和悬浮名片中的用户ID
 * [x] bun和TS化 （via <https://github.com/genzj/bun-ts-userscript-starter）>
-* [ ] 设置头像风格 [可选风格](https://www.dicebear.com/styles/)
-* [ ] 持续化随机用户名和头像
+* [x] 设置头像风格 [可选风格](https://www.dicebear.com/styles/)
+* [x] 持续化随机用户名和头像
 * [ ] 暂停屏蔽
